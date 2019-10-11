@@ -6,10 +6,12 @@
 
 # Instalation disk
 DISK=sda
+PARTITION_DATA_FILE=/tmp/partition_data.cfg
 
 # Size in Mb
 BOOT_PARTITION_SIZE=512
 SWAP_PARTITION_SIZE=0
+ROOT_SIZE=8192
 
 ##########
 # Script #
@@ -17,11 +19,18 @@ SWAP_PARTITION_SIZE=0
 
 function test()
 {
-	echo start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable > /tmp/_partition_table.cfg
+	echo start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable > $PARTITION_DATA_FILE
 	if [ $SWAP_PARTITION_SIZE -gt 0 ]; then
-		echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> /tmp/_partition_table.cfg
+		echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> $PARTITION_DATA_FILE
 	fi
-	echo type=83 >> /tmp/_partition_table.cfg
+	if [ $ROOT_SIZE -eq 0 ]; then
+		# all for /
+		echo type=83 >> $PARTITION_DATA_FILE
+	else
+		echo size$((ROOT_SIZE*2*1024)),type=83 >> $PARTITION_DATA_FILE
+		# rest for /home
+		echo type=83 >> $PARTITION_DATA_FILE
+	fi
 }
 
 function create_partition_efi() 
@@ -35,6 +44,7 @@ function create_partition_bios()
 	{
 	test
 	exit 0
+	sfdisk /dev/$DISK < $PARTITION_DATA_FILE
 	sfdisk /dev/$DISK <<EOF
 start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable
 size=$((SWAP_PARTITION_SIZE*2*1024)),type=82

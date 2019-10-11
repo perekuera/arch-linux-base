@@ -57,6 +57,9 @@ function create_partition_bios()
 	sfdisk -d /dev/$DISK
 }
 
+INPUT=read("Enter number");
+exit 0
+
 ls /sys/firmware/efi/efivars &> /dev/nul
 if [ $? -eq 0 ]; then
 	echo EFI mode ON

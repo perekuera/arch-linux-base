@@ -9,7 +9,7 @@ DISK=sda
 
 # Size in Mb
 BOOT_PARTITION_SIZE=512
-SWAP_PARTITION_SIZE=1024
+SWAP_PARTITION_SIZE=0
 
 ##########
 # Script #

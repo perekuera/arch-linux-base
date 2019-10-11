@@ -18,7 +18,9 @@ SWAP_PARTITION_SIZE=1024
 function test()
 {
 	echo start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable > /tmp/_partition_table.cfg
-	echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> /tmp/_partition_table.cfg
+	if [ $SWAP_PARTITION_SIZE -gt 0 ]; then
+		echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> /tmp/_partition_table.cfg
+	fi
 	echo type=83 >> /tmp/_partition_table.cfg
 }
 
@@ -29,9 +31,10 @@ function create_partition_efi()
 
 function create_partition_bios()
 {
-	echo Create no EFI partition table...
+	echo Create BIOS partition table...
 	{
 	test
+	exit 0
 	sfdisk /dev/$DISK <<EOF
 start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable
 size=$((SWAP_PARTITION_SIZE*2*1024)),type=82

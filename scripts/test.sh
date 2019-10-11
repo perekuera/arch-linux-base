@@ -27,7 +27,7 @@ function test()
 		# all for /
 		echo type=83 >> $PARTITION_DATA_FILE
 	else
-		echo size$((ROOT_SIZE*2*1024)),type=83 >> $PARTITION_DATA_FILE
+		echo size=$((ROOT_SIZE*2*1024)),type=83 >> $PARTITION_DATA_FILE
 		# rest for /home
 		echo type=83 >> $PARTITION_DATA_FILE
 	fi

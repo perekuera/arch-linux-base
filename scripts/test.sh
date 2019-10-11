@@ -43,8 +43,9 @@ function create_partition_bios()
 	echo Create BIOS partition table...
 	{
 	test
-	exit 0
 	sfdisk /dev/$DISK < $PARTITION_DATA_FILE
+	sfdisk -d /dev/$DISK
+	exit 0
 	sfdisk /dev/$DISK <<EOF
 start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable
 size=$((SWAP_PARTITION_SIZE*2*1024)),type=82

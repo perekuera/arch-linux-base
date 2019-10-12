@@ -113,27 +113,26 @@ function mount_partition_bios()
 	fi
 }
 
-function umount_all() 
+function create_undo_all() 
 {
-	umount -R /mnt
-	if [ "$SWAP_ON" = true ]; then
-		swapoff $SWAP_PARTITION
-	fi
+	echo umount -R /mnt > undo.sh
+	echo if [ "$SWAP_ON" = true ]; then >> undo.sh
+	echo 	swapoff $SWAP_PARTITION >> undo.sh
+	echo fi >> undo.sh
+	echo sfdisk --delete $DISK >> undo.sh
 }
 
 ls /sys/firmware/efi/efivars &> /dev/nul
 if [ $? -eq 0 ]; then
-	echo EFI mode ON
 	create_partition_efi
 	format_partition_efi
 	mount_partition_efi
 else
-	echo EFI mode OFF
 	create_partition_bios
 	format_partition_bios
 	mount_partition_bios
 fi
 
-umount_all
+create_undo_all
 
 exit 0

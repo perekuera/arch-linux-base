@@ -173,7 +173,7 @@ else
 #	mount_partition_bios
 fi
 
-#install_base_packages
+install_base_packages
 install_base_configurations
 
 #create_undo_all

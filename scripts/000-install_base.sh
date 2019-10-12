@@ -167,15 +167,14 @@ if [ "$EFI_MODE" = true ]; then
 #	format_partition_efi
 #	mount_partition_efi
 else
-	echo ""
-#	create_partition_bios
-#	format_partition_bios
-#	mount_partition_bios
+	create_partition_bios
+	format_partition_bios
+	mount_partition_bios
 fi
 
 install_base_packages
 install_base_configurations
 
-#create_undo_all
+create_undo_all
 
 exit 0

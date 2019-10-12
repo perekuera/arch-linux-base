@@ -13,6 +13,8 @@ BOOT_PARTITION_SIZE=512
 SWAP_PARTITION_SIZE=0
 ROOT_SIZE=8192
 
+#read -p "Enter number" INPUT
+
 ##########
 # Script #
 ##########
@@ -20,6 +22,11 @@ ROOT_SIZE=8192
 function create_partition_efi() 
 {
 	echo Create EFI partition table...
+}
+
+function format_partition_efi()
+{
+
 }
 
 function create_partition_bios()
@@ -41,16 +48,33 @@ function create_partition_bios()
 	sfdisk -d /dev/$DISK
 }
 
-read -p "Enter number" INPUT
-exit 0
+function format_partition_bios() 
+{
+	PN=0
+	echo Formating partitions...
+	PN=`expr $PN + 1`
+	echo mkfs.ext2 /dev/${DISK}${PN}
+	if [ $SWAP_PARTITION_SIZE -gt 0 ]; then
+		PN=`expr $PN + 1`
+		echo mkswap /dev/${DISK}${PN}
+	fi
+	PN=`expr $PN + 1`
+	echo mkfs.ext4 /dev/${DISK}${PN}
+	if [ $ROOT_SIZE -ne 0 ]; then
+		PN=`expr $PN + 1`
+		echo mkfs.ext4 /dev/${DISK}${PN}
+	fi
+}
 
 ls /sys/firmware/efi/efivars &> /dev/nul
 if [ $? -eq 0 ]; then
 	echo EFI mode ON
 	create_partition_efi
+	format_partition_efi
 else
 	echo EFI mode OFF
 	create_partition_bios
+	format_partition_bios
 fi
 
 exit 0

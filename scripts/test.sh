@@ -86,13 +86,13 @@ function format_partition_bios()
 	echo "############################"
 	echo "## Format BIOS partitions ##"
 	echo "############################"
-	mkfs.ext2 -q $BOOT_PARTITION
+	mkfs.ext2 -F $BOOT_PARTITION
 	if [ "$SWAP_ON" = true ]; then
 		mkswap $SWAP_PARTITION
 	fi
-	mkfs.ext4 -q $ROOT_PARTITION
+	mkfs.ext4 -F $ROOT_PARTITION
 	if [ "$HOME_ON" = true ]; then
-		mkfs.ext4 -q $HOME_PARTITION
+		mkfs.ext4 -F $HOME_PARTITION
 	fi
 }
 

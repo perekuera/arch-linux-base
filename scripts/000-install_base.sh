@@ -10,6 +10,7 @@ PARTITION_DATA_FILE=/tmp/partition_data.cfg
 
 HOST_NAME=arch
 TIME_ZONE=/usr/share/zoneinfo/Europe/Madrid
+LOCALE_CONF=es_ES.UTF-8
 
 # Size in Mb (0 for no partition)
 BOOT_PARTITION_SIZE=512
@@ -141,7 +142,7 @@ function install_base_configurations()
 	arch-chroot /mnt
 	echo $HOST_NAME > /etc/hostname
 	ln -sf $TIME_ZONE /etc/localtime
-	
+	sed 's/#${LOCALE_CONF}/${LOCALE_CONF}/g' /etc/locale.gen > /etc/locale.gen
 }
 
 function create_undo_all() 
@@ -161,18 +162,20 @@ if [ $? -eq 0 ]; then
 fi
 
 if [ "$EFI_MODE" = true ]; then
-	create_partition_efi
-	format_partition_efi
-	mount_partition_efi
+	echo ""
+#	create_partition_efi
+#	format_partition_efi
+#	mount_partition_efi
 else
-	create_partition_bios
-	format_partition_bios
-	mount_partition_bios
+	echo ""
+#	create_partition_bios
+#	format_partition_bios
+#	mount_partition_bios
 fi
 
-install_base_packages
+#install_base_packages
 install_base_configurations
 
-create_undo_all
+#create_undo_all
 
 exit 0

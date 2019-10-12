@@ -86,13 +86,13 @@ function format_partition_bios()
 	echo "############################"
 	echo "## Format BIOS partitions ##"
 	echo "############################"
-	mkfs.ext2 $BOOT_PARTITION
+	mkfs.ext2 -q $BOOT_PARTITION
 	if [ "$SWAP_ON" = true ]; then
 		mkswap $SWAP_PARTITION
 	fi
-	mkfs.ext4 $ROOT_PARTITION
+	mkfs.ext4 -q $ROOT_PARTITION
 	if [ "$HOME_ON" = true ]; then
-		mkfs.ext4 $HOME_PARTITION
+		mkfs.ext4 -q $HOME_PARTITION
 	fi
 }
 
@@ -113,6 +113,14 @@ function mount_partition_bios()
 	fi
 }
 
+function umount_all() 
+{
+	umount -R /mnt
+	if [ "$SWAP_ON" = true ]; then
+		swapoff $SWAP_PARTITION
+	fi
+}
+
 ls /sys/firmware/efi/efivars &> /dev/nul
 if [ $? -eq 0 ]; then
 	echo EFI mode ON
@@ -125,5 +133,7 @@ else
 	format_partition_bios
 	mount_partition_bios
 fi
+
+umount_all
 
 exit 0

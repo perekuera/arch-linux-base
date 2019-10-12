@@ -41,30 +41,30 @@ fi
 
 function create_partition_efi() 
 {
-	echo ################################
-	echo ## Create EFI partition table ##
-	echo ################################
+	echo "################################"
+	echo "## Create EFI partition table ##"
+	echo "################################"
 }
 
 function format_partition_efi()
 {
-	echo ###########################
-	echo ## Format EFI partitions ##
-	echo ###########################
+	echo "###########################"
+	echo "## Format EFI partitions ##"
+	echo "###########################"
 }
 
 function mount_partition_efi()
 {
-	echo ##########################
-	echo ## Mount EFI partitions ##
-	echo ##########################
+	echo "##########################"
+	echo "## Mount EFI partitions ##"
+	echo "##########################"
 }
 
 function create_partition_bios()
 {
-	echo #################################
-	echo ## Create BIOS partition table ##
-	echo #################################
+	echo "#################################"
+	echo "## Create BIOS partition table ##"
+	echo "#################################"
 	echo start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable > $PARTITION_DATA_FILE
 	if [ "$SWAP_ON" = true ]; then
 		echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> $PARTITION_DATA_FILE
@@ -83,13 +83,12 @@ function create_partition_bios()
 
 function format_partition_bios() 
 {
-	echo ############################
-	echo ## Format BIOS partitions ##
-	echo ############################
+	echo "############################"
+	echo "## Format BIOS partitions ##"
+	echo "############################"
 	mkfs.ext2 $BOOT_PARTITION
 	if [ "$SWAP_ON" = true ]; then
 		mkswap $SWAP_PARTITION
-		swapon $SWAP_PARTITION
 	fi
 	mkfs.ext4 $ROOT_PARTITION
 	if [ "$HOME_ON" = true ]; then
@@ -99,9 +98,19 @@ function format_partition_bios()
 
 function mount_partition_bios()
 {
-	echo ###########################
-	echo ## Mount BIOS partitions ##
-	echo ###########################
+	echo "###########################"
+	echo "## Mount BIOS partitions ##"
+	echo "###########################"
+	mount $ROOT_PARTITION /mnt
+	mkdir /mnt/boot
+	mount $BOOT_PARTITION /mnt/boot
+	if [ "$HOME_ON" = true ]; then
+		mkdir /mnt/home
+		mount $HOME_PARTITION /mnt/home
+	fi
+	if [ "$SWAP_ON" = true ]; then
+		swapon $SWAP_PARTITION
+	fi
 }
 
 ls /sys/firmware/efi/efivars &> /dev/nul

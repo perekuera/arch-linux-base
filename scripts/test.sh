@@ -17,22 +17,6 @@ ROOT_SIZE=8192
 # Script #
 ##########
 
-function test()
-{
-	echo start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable > $PARTITION_DATA_FILE
-	if [ $SWAP_PARTITION_SIZE -gt 0 ]; then
-		echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> $PARTITION_DATA_FILE
-	fi
-	if [ $ROOT_SIZE -eq 0 ]; then
-		# all for /
-		echo type=83 >> $PARTITION_DATA_FILE
-	else
-		echo size=$((ROOT_SIZE*2*1024)),type=83 >> $PARTITION_DATA_FILE
-		# rest for /home
-		echo type=83 >> $PARTITION_DATA_FILE
-	fi
-}
-
 function create_partition_efi() 
 {
 	echo Create EFI partition table...
@@ -57,7 +41,7 @@ function create_partition_bios()
 	sfdisk -d /dev/$DISK
 }
 
-INPUT=read("Enter number");
+read -p "Enter number" INPUT
 exit 0
 
 ls /sys/firmware/efi/efivars &> /dev/nul

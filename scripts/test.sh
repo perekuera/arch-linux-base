@@ -120,11 +120,11 @@ function install_base_packages()
 
 function create_undo_all() 
 {
-	echo umount -R /mnt > undo.sh
-	echo if [ "$SWAP_ON" = true ]; then >> undo.sh
-	echo 	swapoff $SWAP_PARTITION >> undo.sh
-	echo fi >> undo.sh
-	echo sfdisk --delete $DISK >> undo.sh
+	echo "umount -R /mnt" > undo.sh
+	echo "if [ "$SWAP_ON" = true ]; then" >> undo.sh
+	echo "	swapoff $SWAP_PARTITION" >> undo.sh
+	echo "fi" >> undo.sh
+	echo "sfdisk --delete $DISK" >> undo.sh
 }
 
 ls /sys/firmware/efi/efivars &> /dev/nul

@@ -35,17 +35,6 @@ if [ $ROOT_PARTITION_SIZE -ne 0 ]; then
 	HOME_PARTITION=${DISK}${PN}
 fi
 
-echo Boot partition = $BOOT_PARTITION
-if [ "$SWAP_ON" = true ]; then
-	echo Swap partition = $SWAP_PARTITION
-fi
-echo Root partition = $ROOT_PARTITION
-if [ "$HOME_ON" = true ]; then
-	echo Home partition = $HOME_PARTITION
-fi
-
-exit 0
-
 ############
 ## Script ##
 ############

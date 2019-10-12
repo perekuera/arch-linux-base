@@ -142,7 +142,7 @@ function install_base_configurations()
 	arch-chroot /mnt
 	echo $HOST_NAME > /etc/hostname
 	ln -sf $TIME_ZONE /etc/localtime
-	sed 's/#${LOCALE_CONF}/${LOCALE_CONF}/g' /etc/locale.gen > /etc/locale.gen
+	sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
 }
 
 function create_undo_all() 

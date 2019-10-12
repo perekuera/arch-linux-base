@@ -8,6 +8,9 @@
 DISK=/dev/sda
 PARTITION_DATA_FILE=/tmp/partition_data.cfg
 
+HOST_NAME=arch
+TIME_ZONE=/usr/share/zoneinfo/Europe/Madrid
+
 # Size in Mb (0 for no partition)
 BOOT_PARTITION_SIZE=512
 SWAP_PARTITION_SIZE=512
@@ -44,6 +47,7 @@ function create_partition_efi()
 	echo "################################"
 	echo "## Create EFI partition table ##"
 	echo "################################"
+	sleep 1
 }
 
 function format_partition_efi()
@@ -51,6 +55,7 @@ function format_partition_efi()
 	echo "###########################"
 	echo "## Format EFI partitions ##"
 	echo "###########################"
+	sleep 1
 }
 
 function mount_partition_efi()
@@ -58,6 +63,7 @@ function mount_partition_efi()
 	echo "##########################"
 	echo "## Mount EFI partitions ##"
 	echo "##########################"
+	sleep 1
 }
 
 function create_partition_bios()
@@ -65,6 +71,7 @@ function create_partition_bios()
 	echo "#################################"
 	echo "## Create BIOS partition table ##"
 	echo "#################################"
+	sleep 1
 	echo start=512,size=$((BOOT_PARTITION_SIZE*2*1024)),type=83,bootable > $PARTITION_DATA_FILE
 	if [ "$SWAP_ON" = true ]; then
 		echo size=$((SWAP_PARTITION_SIZE*2*1024)),type=82 >> $PARTITION_DATA_FILE
@@ -86,6 +93,7 @@ function format_partition_bios()
 	echo "############################"
 	echo "## Format BIOS partitions ##"
 	echo "############################"
+	sleep 1
 	mkfs.ext2 -F $BOOT_PARTITION
 	if [ "$SWAP_ON" = true ]; then
 		mkswap $SWAP_PARTITION
@@ -101,6 +109,7 @@ function mount_partition_bios()
 	echo "###########################"
 	echo "## Mount BIOS partitions ##"
 	echo "###########################"
+	sleep 1
 	mount $ROOT_PARTITION /mnt
 	mkdir /mnt/boot
 	mount $BOOT_PARTITION /mnt/boot
@@ -115,20 +124,43 @@ function mount_partition_bios()
 
 function install_base_packages()
 {
-	pacstrap /mnt base base-devel
+	echo "###########################"
+	echo "## Install base packages ##"
+	echo "###########################"
+	sleep 1
+	pacstrap /mnt base base-devel linux
+}
+
+function install_base_configurations()
+{
+	echo "#################################"
+	echo "## Install base configurations ##"
+	echo "#################################"
+	sleep 1
+	genfstab -pU /mnt >> /mnt/etc/fstab
+	arch-chroot /mnt
+	echo $HOST_NAME > /etc/hostname
+	ln -sf $TIME_ZONE /etc/localtime
+	
 }
 
 function create_undo_all() 
 {
 	echo "umount -R /mnt" > undo.sh
-	echo "if [ "$SWAP_ON" = true ]; then" >> undo.sh
-	echo "	swapoff $SWAP_PARTITION" >> undo.sh
-	echo "fi" >> undo.sh
+	if [ "$SWAP_ON" = true ]; then
+		echo "	swapoff $SWAP_PARTITION" >> undo.sh
+	fi
 	echo "sfdisk --delete $DISK" >> undo.sh
 }
 
+EFI_MODE=false
+
 ls /sys/firmware/efi/efivars &> /dev/nul
 if [ $? -eq 0 ]; then
+	EFI_MODE=true
+fi
+
+if [ "$EFI_MODE" = true ]; then
 	create_partition_efi
 	format_partition_efi
 	mount_partition_efi
@@ -139,6 +171,7 @@ else
 fi
 
 install_base_packages
+install_base_configurations
 
 create_undo_all
 

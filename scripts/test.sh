@@ -113,6 +113,11 @@ function mount_partition_bios()
 	fi
 }
 
+function install_base_packages()
+{
+	pacstrap /mnt base base-devel
+}
+
 function create_undo_all() 
 {
 	echo umount -R /mnt > undo.sh
@@ -132,6 +137,8 @@ else
 	format_partition_bios
 	mount_partition_bios
 fi
+
+install_base_packages
 
 create_undo_all
 

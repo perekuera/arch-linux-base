@@ -1,6 +1,7 @@
 # arch-linux-base
-Arch Linux base instalation
+## Arch Linux base instalation
 
+### First steps
 - Boot ISO image
 - Set loadkeys if necessary
 - Download repositories -> `pacman -Sy`

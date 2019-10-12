@@ -26,7 +26,7 @@ function create_partition_efi()
 
 function format_partition_efi()
 {
-
+	echo Format EFI partitions...
 }
 
 function create_partition_bios()
@@ -51,7 +51,7 @@ function create_partition_bios()
 function format_partition_bios() 
 {
 	PN=0
-	echo Formating partitions...
+	echo Format BIOS partitions...
 	PN=`expr $PN + 1`
 	echo mkfs.ext2 /dev/${DISK}${PN}
 	if [ $SWAP_PARTITION_SIZE -gt 0 ]; then

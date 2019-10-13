@@ -1,4 +1,4 @@
-function create_partition()
+function create_partitions()
 {
 	echo "#################################"
 	echo "## Create BIOS partition table ##"
@@ -20,7 +20,7 @@ function create_partition()
 	sfdisk -d $DISK
 }
 
-function format_partition() 
+function format_partitions() 
 {
 	echo "############################"
 	echo "## Format BIOS partitions ##"
@@ -36,7 +36,7 @@ function format_partition()
 	fi
 }
 
-function mount_partition()
+function mount_partitions()
 {
 	echo "###########################"
 	echo "## Mount BIOS partitions ##"

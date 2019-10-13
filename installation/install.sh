@@ -21,8 +21,10 @@ echo "sfdisk --delete $DISK" >> undo.sh
 create_partitions
 format_partitions
 mount_partitions
-
 install_base_packages
 install_base_configurations
+grub_install
+user_configurations
+final_configurations
 
 exit 0

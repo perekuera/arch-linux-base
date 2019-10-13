@@ -22,7 +22,10 @@ function install_base_configurations()
     locale-gen
     hwclock -w
     echo KEYMAP=$KEYMAP > /etc/vconsole.conf
-    # Need interactivity
+}
+
+function user_configurations()
+{
     echo "Setting root password..."
     passwd
     if [ $CREATE_USER != "" ]; then
@@ -30,6 +33,11 @@ function install_base_configurations()
         echo "Setting $CREATE_USER password..."
         passwd $CREATE_USER
     fi
+}
+
+function final_configurations()
+{
     exit
     umount -R /mnt
+    # reboot
 }

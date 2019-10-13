@@ -32,7 +32,7 @@ else
 fi
 
 if [ $ROOT_PARTITION_SIZE -ne "*" ]; then
-	if [ $HOME_PARTITION_SIZE -gt 0 ] || [ $HOME_PARTITION_SIZE = "*" ]
+	if [ $HOME_PARTITION_SIZE -gt 0 ] || [ $HOME_PARTITION_SIZE = "*" ]; then
 		PN=`expr $PN + 1`
 		HOME_ON=true
 		HOME_PARTITION=${DISK}${PN}

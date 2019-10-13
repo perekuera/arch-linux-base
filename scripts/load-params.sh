@@ -1,3 +1,4 @@
 source ./params.conf
 
-echo "End..."
+echo "Disk = $DISK"
+echo "Host Name = $HOST_NAME"

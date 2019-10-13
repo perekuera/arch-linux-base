@@ -6,6 +6,8 @@ function error()
 	exit 1
 }
 
+PARTITION_DATA_FILE=/tmp/partition_table.cfg
+
 SWAP_ON=false
 HOME_ON=false
 

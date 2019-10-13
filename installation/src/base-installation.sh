@@ -28,7 +28,7 @@ function user_configurations()
 {
     echo "Setting root password..."
     passwd
-    if [ $CREATE_USER != "" ]; then
+    if [ "$CREATE_USER" != "" ]; then
         useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $CREATE_USER
         echo "Setting $CREATE_USER password..."
         passwd $CREATE_USER

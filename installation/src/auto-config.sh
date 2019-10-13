@@ -24,15 +24,15 @@ if [ $SWAP_PARTITION_SIZE -gt 0 ]; then
 	SWAP_PARTITION=${DISK}${PN}
 fi
 
-if [ $ROOT_PARTITION_SIZE -gt 0 ] || [ $ROOT_PARTITION_SIZE = "*" ]; then
+if [ $ROOT_PARTITION_SIZE -gt 0 ] || [ $ROOT_PARTITION_SIZE -eq -1 ]; then
 	PN=`expr $PN + 1`
 	ROOT_PARTITION=${DISK}${PN}
 else
 	error "Root partition size required..."
 fi
 
-if [ $ROOT_PARTITION_SIZE -ne "*" ]; then
-	if [ $HOME_PARTITION_SIZE -gt 0 ] || [ $HOME_PARTITION_SIZE = "*" ]; then
+if [ $ROOT_PARTITION_SIZE -ne -1 ]; then
+	if [ $HOME_PARTITION_SIZE -gt 0 ] || [ $HOME_PARTITION_SIZE -eq -1 ]; then
 		PN=`expr $PN + 1`
 		HOME_ON=true
 		HOME_PARTITION=${DISK}${PN}

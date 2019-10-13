@@ -21,3 +21,11 @@ function mount_partitions()
 	echo "##########################"
 	sleep 1
 }
+
+function grub_install()
+{
+	echo "##################"
+	echo "## Grub install ##"
+	echo "##################"
+	sleep 1
+}

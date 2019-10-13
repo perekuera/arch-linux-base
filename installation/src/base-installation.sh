@@ -18,4 +18,18 @@ function install_base_configurations()
 	echo $HOST_NAME > /etc/hostname
 	ln -sf $TIME_ZONE /etc/localtime
 	sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
+    echo LANG=$LOCALE_CONF > /etc/locale.conf
+    locale-gen
+    hwclock -w
+    echo KEYMAP=$KEYMAP > /etc/vconsole.conf
+    # Need interactivity
+    echo "Setting root password..."
+    passwd
+    if [ $CREATE_USER != "" ]; then
+        useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $CREATE_USER
+        echo "Setting $CREATE_USER password..."
+        passwd $CREATE_USER
+    fi
+    exit
+    umount -R /mnt
 }

@@ -53,3 +53,13 @@ function mount_partition()
 		swapon $SWAP_PARTITION
 	fi
 }
+
+function grub_install()
+{
+	echo "##################"
+	echo "## Grub install ##"
+	echo "##################"
+	sleep 1
+	grub-install $DISK
+	grub-mkconfig -o /boot/grub/grub.cfg
+}

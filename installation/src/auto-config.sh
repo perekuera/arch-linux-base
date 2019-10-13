@@ -1,4 +1,4 @@
-# Autoconfig variables
+#!/bin/bash
 
 function error()
 {

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function create_partitions() 
 {
 	echo "################################"

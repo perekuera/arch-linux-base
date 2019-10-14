@@ -65,7 +65,9 @@ function grub_install()
 	echo "## Grub install ##"
 	echo "##################"
 	sleep 1
+	arch-chroot /mnt /bin/bash <<EOF
 	grub-install $DISK
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "Grub install done"
+EOF
 }

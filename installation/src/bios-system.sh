@@ -20,6 +20,7 @@ function create_partitions()
 	fi
 	sfdisk $DISK < $PARTITION_DATA_FILE > /dev/nul
 	sfdisk -d $DISK
+	echo "Create partitions done"
 }
 
 function format_partitions() 
@@ -36,6 +37,7 @@ function format_partitions()
 	if [ "$HOME_ON" = true ]; then
 		mkfs.ext4 -F $HOME_PARTITION
 	fi
+	echo "Format done"
 }
 
 function mount_partitions()
@@ -54,6 +56,7 @@ function mount_partitions()
 	if [ "$SWAP_ON" = true ]; then
 		swapon $SWAP_PARTITION
 	fi
+	echo "Mount partitions done"
 }
 
 function grub_install()
@@ -64,4 +67,5 @@ function grub_install()
 	sleep 1
 	grub-install $DISK
 	grub-mkconfig -o /boot/grub/grub.cfg
+	echo "Grub install done"
 }

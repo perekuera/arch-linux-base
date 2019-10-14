@@ -8,6 +8,7 @@ function install_base_packages()
 	sleep 1
 	#pacstrap /mnt base base-devel linux
     pacstrap /mnt base
+    echo "Base packages install done"
 }
 
 function install_base_configurations()

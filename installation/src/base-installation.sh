@@ -6,8 +6,8 @@ function install_base_packages()
 	echo "## Install base packages ##"
 	echo "###########################"
 	sleep 1
-	#pacstrap /mnt base base-devel linux
-    pacstrap /mnt base
+	#pacstrap /mnt base base-devel linux grub
+    pacstrap /mnt base grub
     echo "Base packages install done"
 }
 

@@ -17,24 +17,17 @@ function install_base_configurations()
 	echo "## Install base configurations ##"
 	echo "#################################"
 	sleep 1
-    echo ">>> getfstab!!!!"
 	genfstab -pU /mnt >> /mnt/etc/fstab
     echo ">>> arch-chroot!!!!"
-	arch-chroot /mnt
-    echo ">>> host name!!!!"
-	echo $HOST_NAME > /etc/hostname
-    echo ">>> local time!!!!"
-	ln -sf $TIME_ZONE /etc/localtime
-    echo ">>> locale gen!!!!"
-	sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
-    echo ">>> locale conf!!!!"
-    echo LANG=$LOCALE_CONF > /etc/locale.conf
-    echo ">>> locale gen!!!!"
-    locale-gen
-    echo ">>> clock!!!!"
-    hwclock -w
-    echo ">>>> vconsole!!!!"
-    echo KEYMAP=$KEYMAP > /etc/vconsole.conf
+	arch-chroot /mnt /bin/bash <<EOF
+        echo $HOST_NAME > /etc/hostname
+        ln -sf $TIME_ZONE /etc/localtime
+        sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
+        echo LANG=$LOCALE_CONF > /etc/locale.conf
+        locale-gen
+        hwclock -w
+        echo KEYMAP=$KEYMAP > /etc/vconsole.conf
+    EOF
 }
 
 function user_configurations()

@@ -27,6 +27,7 @@ function install_base_configurations()
         hwclock -w
         echo KEYMAP=$KEYMAP > /etc/vconsole.conf
 EOF
+    echo "Base configurations install done"
 }
 
 function user_configurations()
@@ -35,19 +36,24 @@ function user_configurations()
 	echo "## User configurations ##"
 	echo "#########################"
     arch-chroot /mnt /bin/bash <<EOF
-        passwd
+        echo "root:${ROOT_PASSWORD}" | chpasswd
 EOF
-    if [ "$CREATE_USER" != "" ]; then
+    if [ "$USERNAME" != "" ]; then
         arch-chroot /mnt /bin/bash <<EOF
-            useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $CREATE_USER
-            echo "Setting $CREATE_USER password..."
-            passwd $CREATE_USER
+            useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $USER_NAME
+            echo "Setting $USER_NAME password..."
+            echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 EOF
     fi
+    echo "User configurations done"
 }
 
 function final_configurations()
 {
+	echo "##########################"
+	echo "## Final configurations ##"
+	echo "##########################"
     umount -R /mnt
     # reboot
+    echo "Final configurations done"
 }

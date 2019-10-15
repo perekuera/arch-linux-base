@@ -35,7 +35,7 @@ if [[ $UEFI -eq 1 ]]; then
     printf "n\n1\n\n+512M\nef00\nw\ny\n" | gdisk /dev/sda
     yes | mkfs.vfat -F32 /dev/sda1
 else
-    printf "n\np\n1\n\n+512M\nw\n" | fdisk /dev/sda
+    printf "n\np\n1\n\n\nw\n" | fdisk /dev/sda
     yes | mkfs.ext4 /dev/sda1
 fi
 

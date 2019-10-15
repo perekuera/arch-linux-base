@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function print() {
-    printf "<<<\n\t$1\n>>>"
+    printf "\n<<< $1 >>>\n"
 }
 
 source ./setup.conf

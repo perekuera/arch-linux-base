@@ -29,6 +29,7 @@ fi
 ### Disk partitions ###
 #######################
 
+#dd if=/dev/zero of=/dev/sdX  bs=512  count=1
 sgdisk --zap-all $INSTALLATION_DISK
 
 if [[ $UEFI -eq 1 ]]; then
@@ -36,7 +37,7 @@ if [[ $UEFI -eq 1 ]]; then
     yes | mkfs.vfat -F32 /dev/sda1
     printf "n\n2\n\n\n8e00\nw\ny\n"| gdisk /dev/sda
 else
-    printf "n\np\n1\n+512M\n\nw\n" | fdisk /dev/sda
+    printf "n\n p\n 1\n \n +512M\n w\n" | fdisk /dev/sda
     yes | mkfs.ext4 /dev/sda1
     printf "n\np\n2\n\n\nt\n2\n8e\nw\n" | fdisk /dev/sda
 fi

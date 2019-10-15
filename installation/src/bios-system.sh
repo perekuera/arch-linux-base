@@ -29,13 +29,13 @@ function format_partitions()
 	echo "## Format BIOS partitions ##"
 	echo "############################"
 	sleep 1
-	mkfs.ext2 -F $BOOT_PARTITION
+	mkfs.ext2 $BOOT_PARTITION
 	if [ "$SWAP_ON" = true ]; then
 		mkswap $SWAP_PARTITION
 	fi
-	mkfs.ext4 -F $ROOT_PARTITION
+	mkfs.ext4 $ROOT_PARTITION
 	if [ "$HOME_ON" = true ]; then
-		mkfs.ext4 -F $HOME_PARTITION
+		mkfs.ext4 $HOME_PARTITION
 	fi
 	echo "Format done"
 }
@@ -66,6 +66,7 @@ function grub_install()
 	echo "##################"
 	sleep 1
 	arch-chroot /mnt /bin/bash <<EOF
+	echo "Instal grub $DISK"
 	grub-install $DISK
 	grub-mkconfig -o /boot/grub/grub.cfg
 	echo "Grub install done"

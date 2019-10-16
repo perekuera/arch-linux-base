@@ -47,3 +47,4 @@ else
     echo start=512,type=L,bootable > $TEMP_PARTITION_DATA_FILE
 fi
 
+sfdisk $DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul

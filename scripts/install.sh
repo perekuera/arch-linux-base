@@ -4,7 +4,15 @@ function print() {
     printf "\n<<< $1 >>>\n"
 }
 
-source ./setup.conf
+#####################
+### Configuration ###
+#####################
+
+# Installation disk
+INSTALLATION_DISK=/dev/sda
+
+# Temporary partition config file
+TEMP_PARTITION_DATA_FILE=/tmp/temp_partition_data_file.cfg
 
 # Display configuration
 print "Installation disk: $INSTALLATION_DISK"

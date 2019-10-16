@@ -32,6 +32,8 @@ fi
 #dd if=/dev/zero of=/dev/sdX  bs=512  count=1
 #sgdisk --zap-all $INSTALLATION_DISK
 
+UEFI=1
+
 if [[ $UEFI -eq 1 ]]; then
     #printf "n\n1\n\n+512M\nef00\nw\ny\n" | gdisk /dev/sda
     #yes | mkfs.vfat -F32 /dev/sda1
@@ -44,7 +46,7 @@ else
     #yes | mkfs.ext4 /dev/sda1
     #printf "n\np\n2\n\n\nt\n2\n8e\nw\n" | fdisk /dev/sda
     echo label: dos > $TEMP_PARTITION_DATA_FILE
-    echo start=512,type=L,bootable >> $TEMP_PARTITION_DATA_FILE
+    echo start=512,type=83,bootable >> $TEMP_PARTITION_DATA_FILE
 fi
 
 sfdisk $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul

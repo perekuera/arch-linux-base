@@ -33,14 +33,14 @@ else
     print "BIOS detected"
 fi
 
-#######################
-### Disk partitions ###
-#######################
+##############################
+### Create disk partitions ###
+##############################
+
+print "Create partitions"
 
 #dd if=/dev/zero of=/dev/sdX  bs=512  count=1
-#sgdisk --zap-all $INSTALLATION_DISK
-
-UEFI=1
+sgdisk --zap-all $INSTALLATION_DISK
 
 if [[ $UEFI -eq 1 ]]; then
     #printf "n\n1\n\n+512M\nef00\nw\ny\n" | gdisk /dev/sda
@@ -58,3 +58,20 @@ else
 fi
 
 sfdisk $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
+
+###############################
+### Format/mount partitions ###
+###############################
+
+print "Format/mount partitions"
+
+if [[ $UEFI -eq 1 ]]; then
+    mkfs.vfat -F32 ${INSTALLATION_DISK}1
+    mkfs.ext4 ${INSTALLATION_DISK}2
+
+else
+    mkfs.ext4 ${INSTALLATION_DISK}1
+    mount ${INSTALLATION_DISK}1 /mnt
+fi
+
+

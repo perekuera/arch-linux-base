@@ -68,10 +68,14 @@ print "Format/mount partitions"
 if [[ $UEFI -eq 1 ]]; then
     mkfs.vfat -F32 ${INSTALLATION_DISK}1
     mkfs.ext4 ${INSTALLATION_DISK}2
-
+    mount ${INSTALLATION_DISK}2 /mnt
+    mkdir -p /mnt/boot/efi
+    mount ${INSTALLATION_DISK}1 /mnt/boot/efi
 else
     mkfs.ext4 ${INSTALLATION_DISK}1
     mount ${INSTALLATION_DISK}1 /mnt
+    mkdir /mnt/boot
 fi
 
 
+  

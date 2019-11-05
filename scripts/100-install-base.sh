@@ -68,6 +68,8 @@ sfdisk $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
 
 sleep 1
 
+exit
+
 ###############################
 ### Format/mount partitions ###
 ###############################

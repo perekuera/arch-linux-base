@@ -94,8 +94,7 @@ sleep 1
 
 print "Install base packages"
 
-pacstrap /mnt base
-pacstrap /mnt base-devel
+pacstrap /mnt base base-devel grub
 
 sleep 1
 

@@ -38,6 +38,8 @@ else
     print "BIOS detected"
 fi
 
+sleep 1
+
 ##############################
 ### Create disk partitions ###
 ##############################
@@ -64,6 +66,8 @@ fi
 
 sfdisk $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
 
+sleep 1
+
 ###############################
 ### Format/mount partitions ###
 ###############################
@@ -82,13 +86,21 @@ else
     mkdir /mnt/boot
 fi
 
+sleep 1
+
 ########################
 ### Install packages ###
 ########################
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel grub
+pacstrap /mnt base
+
+exit
+
+pacstrap /mnt base-devel
+
+sleep 1
 
 ###########################
 ### Base configurations ###

@@ -136,8 +136,8 @@ sleep 1
 print "Grub install"
 
 arch-chroot /mnt /bin/bash <<EOF
-echo "Instal grub $DISK"
-grub-install $DISK
+echo "Instal grub $INSTALLATION_DISK"
+grub-install $INSTALLATION_DISK
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF

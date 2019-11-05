@@ -88,6 +88,8 @@ fi
 
 sleep 1
 
+exit
+
 ########################
 ### Install packages ###
 ########################
@@ -95,9 +97,6 @@ sleep 1
 print "Install base packages"
 
 pacstrap /mnt base
-
-exit
-
 pacstrap /mnt base-devel
 
 sleep 1

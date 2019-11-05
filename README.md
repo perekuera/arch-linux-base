@@ -7,6 +7,7 @@
 - Download repositories -> `pacman -Sy`
 - Install git -> `pacman -S git`
 - Clone repository -> `git clone https://github.com/perekuera/arch-linux-base.git`
+- Update config -> 
 
 ### Wifi conectifivy
 You need internet connection at this moment. Use `wifi-menu` to configure it if necessary.

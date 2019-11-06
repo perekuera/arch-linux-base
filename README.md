@@ -4,8 +4,7 @@
 ### First steps
 - Boot ISO image
 - Set loadkeys if necessary
-- Download repositories -> `pacman -Sy`
-- Install git -> `pacman -S git`
+- Download repositories and install git -> `pacman -Sy git`
 - Clone repository -> `git clone https://github.com/perekuera/arch-linux-base.git`
 - Update config -> 
 

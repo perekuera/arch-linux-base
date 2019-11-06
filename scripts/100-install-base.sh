@@ -20,7 +20,7 @@ USER_PASSWORD=1234
 TEMP_PARTITION_DATA_FILE=/tmp/temp_partition_data_file.cfg
 
 # Display configuration
-print "Installation disk: $INSTALLATION_DISK"
+print "Installation disk: $INSTALLATION_DISK"s
 
 sleep 1
 

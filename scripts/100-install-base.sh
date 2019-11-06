@@ -129,7 +129,7 @@ useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner 
 echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 EOF
 
-sleep 1
+sleep 3
 
 ####################
 ### Grub install ###
@@ -148,6 +148,6 @@ umount -R /mnt
 
 print "Rebooting system"
 
-sleep 1
+sleep 3
 
 reboot

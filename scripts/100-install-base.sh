@@ -146,4 +146,8 @@ EOF
 
 umount -R /mnt
 
+print "Rebooting system"
+
+sleep 1
+
 reboot

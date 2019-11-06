@@ -94,7 +94,7 @@ sleep 1
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel linux networkmanager grub nano
+pacstrap /mnt base base-devel linux linux-firmware networkmanager grub nano
 
 sleep 1
 

@@ -96,7 +96,7 @@ exit
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel grub
+pacstrap /mnt base base-devel linux networkmanager grub nano
 
 sleep 1
 
@@ -115,6 +115,8 @@ echo LANG=$LOCALE_CONF > /etc/locale.conf
 locale-gen
 hwclock -w
 echo KEYMAP=$KEYMAP > /etc/vconsole.conf
+mkinitcpio -p linux
+systemctl enable NetworkManager
 EOF
 
 #############
@@ -139,11 +141,11 @@ print "Grub install"
 
 arch-chroot /mnt /bin/bash <<EOF
 echo "Instal grub $INSTALLATION_DISK"
-grub-install $INSTALLATION_DISK
+grub-install --target=i386-pc --recheck $INSTALLATION_DISK
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF
 
 umount -R /mnt
 
-#reboot
+reboot

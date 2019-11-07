@@ -128,7 +128,7 @@ exit
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel linux linux-firmware networkmanager grub nano
+pacstrap /mnt base base-devel linux linux-firmware networkmanager grub bash-completion nano
 
 sleep 1
 
@@ -140,13 +140,17 @@ print "Base configurations"
 
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt /bin/bash <<EOF
-echo $HOST_NAME > /etc/hostname
 ln -sf $TIME_ZONE /etc/localtime
-sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
+hwclock --systohc
+echo $HOST_NAME > /etc/hostname
+echo -e "127.0.0.1\tlocalhost" >> /etc/hosts
+echo -e "::1\t\tlocalhost" >> /etc/hosts
+echo -e "127.0.0.1\t${HOST_NAME}.localdomain\t${HOST_NAME}" >> /etc/hosts
 echo LANG=$LOCALE_CONF > /etc/locale.conf
-locale-gen
-hwclock -w
 echo KEYMAP=$KEYMAP > /etc/vconsole.conf
+sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
+locale-gen
+sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
 mkinitcpio -p linux
 systemctl enable NetworkManager
 EOF
@@ -159,7 +163,7 @@ print "Users"
 
 arch-chroot /mnt /bin/bash <<EOF
 echo "root:${ROOT_PASSWORD}" | chpasswd
-useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $USER_NAME
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner,network,rfkill -s /bin/bash $USER_NAME
 echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 EOF
 
@@ -173,7 +177,7 @@ print "Grub install"
 
 arch-chroot /mnt /bin/bash <<EOF
 echo "Instal grub $INSTALLATION_DISK"
-grub-install --target=i386-pc --recheck $INSTALLATION_DISK
+grub-install $INSTALLATION_DISK
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF

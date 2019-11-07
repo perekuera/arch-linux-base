@@ -120,8 +120,6 @@ fi
 
 sleep 3
 
-exit
-
 ########################
 ### Install packages ###
 ########################
@@ -130,7 +128,7 @@ print "Install base packages"
 
 pacstrap /mnt base base-devel linux linux-firmware networkmanager grub nano
 
-sleep 1
+sleep 3
 
 ###########################
 ### Base configurations ###
@@ -138,7 +136,10 @@ sleep 1
 
 print "Base configurations"
 
-genfstab -pU /mnt >> /mnt/etc/fstab
+genfstab -U /mnt >> /mnt/etc/fstab
+
+exit
+
 arch-chroot /mnt /bin/bash <<EOF
 echo $HOST_NAME > /etc/hostname
 ln -sf $TIME_ZONE /etc/localtime

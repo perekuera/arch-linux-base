@@ -82,7 +82,7 @@ else
     fi
 fi
 
-sfdisk $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
+sfdisk --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
 
 sleep 3
 
@@ -120,6 +120,8 @@ fi
 
 sleep 3
 
+exit
+
 ########################
 ### Install packages ###
 ########################
@@ -128,7 +130,7 @@ print "Install base packages"
 
 pacstrap /mnt base base-devel linux linux-firmware networkmanager grub nano
 
-sleep 3
+sleep 1
 
 ###########################
 ### Base configurations ###
@@ -137,9 +139,6 @@ sleep 3
 print "Base configurations"
 
 genfstab -U /mnt >> /mnt/etc/fstab
-
-exit
-
 arch-chroot /mnt /bin/bash <<EOF
 echo $HOST_NAME > /etc/hostname
 ln -sf $TIME_ZONE /etc/localtime

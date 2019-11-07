@@ -9,20 +9,34 @@ function print() {
 #####################
 
 INSTALLATION_DISK=/dev/sda
+
+# Size in Mb (0 no swap)
+SWAP_SIZE=1024
+
 HOST_NAME=arch
+
 TIME_ZONE=/usr/share/zoneinfo/Europe/Madrid
+
 LOCALE_CONF=es_ES.UTF-8
+
 KEYMAP=es
+
+# Users
 ROOT_PASSWORD=1234
 USER_NAME=pere
 USER_PASSWORD=1234
 
-TEMP_PARTITION_DATA_FILE=/tmp/temp_partition_data_file.cfg
-
 # Display configuration
-print "Installation disk: $INSTALLATION_DISK"s
+print "Installation disk: $INSTALLATION_DISK"
+if [[ $SWAP_SIZE -gt 0 ]]; then
+    print "Swap partition size: ${SWAP_SIZE}Mb"
+fi
+print "Host name: $HOST_NAME"
+print "Time zone: $TIME_ZONE"
+print "Locale configuration: $LOCALE_CONF"
+print "Keymap table: $KEYMAP"
 
-sleep 1
+sleep 3
 
 ###########################
 ### UEFI/BIOS detection ###
@@ -46,27 +60,30 @@ sleep 1
 
 print "Create partitions"
 
-#dd if=/dev/zero of=/dev/sdX  bs=512  count=1
+TEMP_PARTITION_DATA_FILE=/tmp/temp_partition_data_file.cfg
+
 sgdisk --zap-all $INSTALLATION_DISK
 
 if [[ $UEFI -eq 1 ]]; then
-    #printf "n\n1\n\n+512M\nef00\nw\ny\n" | gdisk /dev/sda
-    #yes | mkfs.vfat -F32 /dev/sda1
-    #printf "n\n2\n\n\n8e00\nw\ny\n"| gdisk /dev/sda
     echo label: gpt > $TEMP_PARTITION_DATA_FILE
     echo start=2048,size=1048576,type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B >> $TEMP_PARTITION_DATA_FILE
+    if [[ $SWAP_SIZE -gt 0 ]]; then
+        echo size=$(($SWAP_SIZE * 2048)),type=0657FD6D-A4AB-43C4-84E5-0933C84B4F4F >> $TEMP_PARTITION_DATA_FILE
+    fi
     echo type=0FC63DAF-8483-4772-8E79-3D69D8477DE4 >> $TEMP_PARTITION_DATA_FILE
 else
-    #printf "n\n p\n 1\n \n +512M\n w\n" | fdisk /dev/sda
-    #yes | mkfs.ext4 /dev/sda1
-    #printf "n\np\n2\n\n\nt\n2\n8e\nw\n" | fdisk /dev/sda
     echo label: dos > $TEMP_PARTITION_DATA_FILE
-    echo start=2048,type=83,bootable >> $TEMP_PARTITION_DATA_FILE
+    if [[ $SWAP_SIZE -gt 0 ]]; then
+        echo start=2048,type=82 >> $TEMP_PARTITION_DATA_FILE
+        echo type=83,bootable >> $TEMP_PARTITION_DATA_FILE
+    else
+        echo start=2048,type=83,bootable >> $TEMP_PARTITION_DATA_FILE
+    fi
 fi
 
 sfdisk $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
 
-sleep 1
+sleep 3
 
 ###############################
 ### Format/mount partitions ###
@@ -76,17 +93,33 @@ print "Format/mount partitions"
 
 if [[ $UEFI -eq 1 ]]; then
     mkfs.vfat -F32 ${INSTALLATION_DISK}1
-    mkfs.ext4 ${INSTALLATION_DISK}2
-    mount ${INSTALLATION_DISK}2 /mnt
+    if [[ $SWAP_SIZE -gt 0 ]]; then
+        mkswap ${INSTALLATION_DISK}2
+        swapon ${INSTALLATION_DISK}2
+        mkfs.ext4 ${INSTALLATION_DISK}3
+        mount ${INSTALLATION_DISK}3 /mnt
+    else
+        mkfs.ext4 ${INSTALLATION_DISK}2
+        mount ${INSTALLATION_DISK}2 /mnt
+    fi
     mkdir -p /mnt/boot/efi
     mount ${INSTALLATION_DISK}1 /mnt/boot/efi
 else
-    mkfs.ext4 ${INSTALLATION_DISK}1
-    mount ${INSTALLATION_DISK}1 /mnt
+    if [[ $SWAP_SIZE -gt 0 ]]; then
+        mkswap ${INSTALLATION_DISK}1
+        swapon ${INSTALLATION_DISK}1
+        mkfs.ext4 ${INSTALLATION_DISK}2
+        mount ${INSTALLATION_DISK}2 /mnt
+    else
+        mkfs.ext4 ${INSTALLATION_DISK}1
+        mount ${INSTALLATION_DISK}1 /mnt
+    fi
     mkdir /mnt/boot
 fi
 
-sleep 1
+sleep 3
+
+exit
 
 ########################
 ### Install packages ###

@@ -74,7 +74,8 @@ if [[ $UEFI -eq 1 ]]; then
 else
     echo label: dos > $TEMP_PARTITION_DATA_FILE
     if [[ $SWAP_SIZE -gt 0 ]]; then
-        echo start=2048,type=82 >> $TEMP_PARTITION_DATA_FILE
+        echo start=2048,size=$(($SWAP_SIZE * 2048)),type=82 >> $TEMP_PARTITION_DATA_FILE
+        print "Swap partition created"
         echo type=83,bootable >> $TEMP_PARTITION_DATA_FILE
     else
         echo start=2048,type=83,bootable >> $TEMP_PARTITION_DATA_FILE

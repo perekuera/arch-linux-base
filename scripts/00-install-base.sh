@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source ./config.cfg
+source ./install.conf
+
+function print() {
+    printf "\n<<< $1 >>>\n"
+}
 
 ###########################
 ### UEFI/BIOS detection ###
@@ -16,17 +20,17 @@ else
     print "BIOS detected"
 fi
 
-sleep 1
-
 ##############################
 ### Create disk partitions ###
 ##############################
 
 print "Create partitions"
+sleep 3
 
 TEMP_PARTITION_DATA_FILE=/tmp/temp_partition_data_file.cfg
 
-sgdisk --zap-all $INSTALLATION_DISK
+#sgdisk --zap-all $INSTALLATION_DISK
+wipefs --all $INSTALLATION_DISK > /dev/null
 
 if [[ $UEFI -eq 1 ]]; then
     echo label: gpt > $TEMP_PARTITION_DATA_FILE
@@ -46,15 +50,14 @@ else
     fi
 fi
 
-sfdisk --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/nul
-
-sleep 3
+sfdisk --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/null
 
 ###############################
 ### Format/mount partitions ###
 ###############################
 
 print "Format/mount partitions"
+sleep 3
 
 if [[ $UEFI -eq 1 ]]; then
     mkfs.vfat -F32 ${INSTALLATION_DISK}1
@@ -81,3 +84,71 @@ else
     fi
     mkdir /mnt/boot
 fi
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+########################
+### Install packages ###
+########################
+
+print "Install base packages"
+sleep 3
+
+pacstrap /mnt base base-devel linux linux-firmware 
+pacstrap /mnt os-prober networkmanager grub bash-completion nano
+
+###########################
+### Base configurations ###
+###########################
+
+print "Base configurations"
+sleep 3
+
+arch-chroot /mnt /bin/bash <<EOF
+ln -sf $TIME_ZONE /etc/localtime
+hwclock --systohc
+echo $HOST_NAME > /etc/hostname
+echo -e "127.0.0.1\tlocalhost" >> /etc/hosts
+echo -e "::1\t\tlocalhost" >> /etc/hosts
+echo -e "127.0.0.1\t${HOST_NAME}.localdomain\t${HOST_NAME}" >> /etc/hosts
+echo LANG=$LOCALE_CONF > /etc/locale.conf
+echo KEYMAP=$KEYMAP > /etc/vconsole.conf
+sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/" /etc/locale.gen
+locale-gen
+sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
+mkinitcpio -p linux
+systemctl enable NetworkManager
+EOF
+
+#############
+### Users ###
+#############
+
+print "Create root and default user"
+sleep 3
+
+arch-chroot /mnt /bin/bash <<EOF
+echo "root:${ROOT_PASSWORD}" | chpasswd
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner,network,rfkill -s /bin/bash $USER_NAME
+echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
+sed -r -i "s/# %wheel ALL=\(ALL\) ALL/%wheel ALL=\(ALL\) ALL/g" /etc/sudoers
+EOF
+
+####################
+### Grub install ###
+####################
+
+print "Grub install"
+sleep 3
+
+arch-chroot /mnt /bin/bash <<EOF
+echo "Instal grub $INSTALLATION_DISK"
+os-probes
+grub-install $INSTALLATION_DISK
+grub-mkconfig -o /boot/grub/grub.cfg
+echo "Grub install done"
+EOF
+
+umount -R /mnt
+
+print "Type 'reboot'"

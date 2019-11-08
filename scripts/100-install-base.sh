@@ -128,7 +128,8 @@ exit
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel linux linux-firmware networkmanager grub bash-completion nano
+pacstrap /mnt base base-devel linux linux-firmware 
+pacstrap /mnt os-prober networkmanager grub bash-completion nano
 
 sleep 1
 
@@ -148,7 +149,7 @@ echo -e "::1\t\tlocalhost" >> /etc/hosts
 echo -e "127.0.0.1\t${HOST_NAME}.localdomain\t${HOST_NAME}" >> /etc/hosts
 echo LANG=$LOCALE_CONF > /etc/locale.conf
 echo KEYMAP=$KEYMAP > /etc/vconsole.conf
-sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/g" /etc/locale.gen
+sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/" /etc/locale.gen
 locale-gen
 sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
 mkinitcpio -p linux
@@ -165,6 +166,7 @@ arch-chroot /mnt /bin/bash <<EOF
 echo "root:${ROOT_PASSWORD}" | chpasswd
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner,network,rfkill -s /bin/bash $USER_NAME
 echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
+sed -r -i "s/# %wheel ALL=\(ALL\) ALL/%wheel ALL=\(ALL\) ALL/g" /etc/sudoers
 EOF
 
 sleep 3

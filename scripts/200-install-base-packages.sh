@@ -1,6 +1,6 @@
 #!/bin/bash
 
-soruce ./config.cfg
+source ./config.cfg
 
 ########################
 ### Install packages ###

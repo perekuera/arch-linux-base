@@ -95,7 +95,21 @@ print "Install base packages"
 sleep 3
 
 pacstrap /mnt base base-devel linux linux-firmware 
-pacstrap /mnt os-prober networkmanager grub bash-completion nano
+pacstrap /mnt os-prober networkmanager grub bash-completion 
+pacstrap /mnt nano ntfs-3g gvfs gvfs-afc gvfs-mtp
+
+if [[ $UEFI -eq 1 ]]; then
+    pacstrap /mnt efibootmgr
+fi
+
+if [[ $ENABLE_WIFI -eq 1 ]]; then
+    pacstrap /mnt netctl wpa_supplicant dialog
+fi
+
+if [[ $ENABLE_TOUCHPAD -eq 1 ]]; then
+    pacstrap /mnt xf86-input-synaptics
+fi
+
 
 ###########################
 ### Base configurations ###
@@ -119,6 +133,12 @@ sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
 mkinitcpio -p linux
 systemctl enable NetworkManager
 EOF
+
+if [[ ! -z "$WIFI_SSID" ] && [ ! -z "$WIFI_PASSWORD" ]]; then
+arch-chroot /mnt /bin/bash <<EOF
+sudo nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
+EOF
+fi
 
 #############
 ### Users ###

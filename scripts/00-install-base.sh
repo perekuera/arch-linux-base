@@ -96,7 +96,7 @@ sleep 3
 
 pacstrap /mnt base base-devel linux linux-firmware 
 pacstrap /mnt os-prober networkmanager grub bash-completion 
-pacstrap /mnt nano ntfs-3g gvfs gvfs-afc gvfs-mtp
+pacstrap /mnt nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr
@@ -136,7 +136,7 @@ EOF
 
 if [[ ! -z "$WIFI_SSID" ] && [ ! -z "$WIFI_PASSWORD" ]]; then
 arch-chroot /mnt /bin/bash <<EOF
-sudo nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
+nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
 EOF
 fi
 
@@ -169,6 +169,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF
 
+print "Update packages"
+sleep 3
+
+arch-chroot /mnt /bin/bash <<EOF
+pacman -Syyu
+EOF
+
 umount -R /mnt
 
-print "Type 'reboot'"
+print "Base installation complete, type 'reboot'"

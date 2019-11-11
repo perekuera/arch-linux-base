@@ -174,6 +174,7 @@ sleep 3
 
 arch-chroot /mnt /bin/bash <<EOF
 pacman -Syyu
+pacman -S git --noconfirm --needed
 EOF
 
 umount -R /mnt

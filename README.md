@@ -9,5 +9,5 @@
 - Move to scripts folder -> `cd ./arh-linux-base/scripts`
 - Edit install.conf file -> `nano ./install.conf`
 
-### Wifi conectifivy
+### Wifi conectivity
 You need internet connection at this moment. Use `wifi-menu` to configure it if necessary.

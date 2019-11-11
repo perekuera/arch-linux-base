@@ -134,7 +134,7 @@ mkinitcpio -p linux
 systemctl enable NetworkManager
 EOF
 
-if [[ ! -z "$WIFI_SSID" ] && [ ! -z "$WIFI_PASSWORD" ]]; then
+if [[ ! -z "$WIFI_SSID" && ! -z "$WIFI_PASSWORD" ]]; then
 arch-chroot /mnt /bin/bash <<EOF
 nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
 EOF

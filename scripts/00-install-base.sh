@@ -163,7 +163,7 @@ sleep 3
 
 arch-chroot /mnt /bin/bash <<EOF
 echo "Instal grub $INSTALLATION_DISK"
-os-probes
+os-prober
 grub-install $INSTALLATION_DISK
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"

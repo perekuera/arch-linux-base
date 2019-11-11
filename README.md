@@ -8,6 +8,7 @@
 - Clone repository -> `git clone https://github.com/perekuera/arch-linux-base.git`
 - Move to scripts folder -> `cd ./arh-linux-base/scripts`
 - Edit install.conf file -> `nano ./install.conf`
+- Execute script -> `sh 00-install-base.sh`
 
 ### Wifi conectivity
 You need internet connection at this moment. Use `wifi-menu` to configure it if necessary.

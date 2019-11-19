@@ -91,8 +91,8 @@ fi
 print "Install base packages"
 
 pacstrap /mnt base base-devel linux linux-firmware 
-pacstrap /mnt os-prober networkmanager grub bash-completion 
-pacstrap /mnt nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
+    \ os-prober networkmanager grub bash-completion 
+    \ nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr
@@ -156,7 +156,7 @@ EOF
 print "Grub install"
 
 arch-chroot /mnt /bin/bash <<EOF
-echo "Instal grub $INSTALLATION_DISK"
+echo "Install grub $INSTALLATION_DISK"
 os-prober
 grub-install $INSTALLATION_DISK
 grub-mkconfig -o /boot/grub/grub.cfg

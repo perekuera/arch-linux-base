@@ -84,8 +84,6 @@ else
     mkdir /mnt/boot
 fi
 
-genfstab -U /mnt >> /mnt/etc/fstab
-
 ########################
 ### Install packages ###
 ########################
@@ -108,6 +106,7 @@ if [[ $ENABLE_TOUCHPAD -eq 1 ]]; then
     pacstrap /mnt xf86-input-synaptics
 fi
 
+genfstab -U /mnt >> /mnt/etc/fstab
 
 ###########################
 ### Base configurations ###

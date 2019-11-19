@@ -4,6 +4,7 @@ source ./install.conf
 
 function print() {
     printf "\n<<< $1 >>>\n"
+    sleep 3
 }
 
 ###########################
@@ -25,7 +26,6 @@ fi
 ##############################
 
 print "Create partitions"
-sleep 3
 
 TEMP_PARTITION_DATA_FILE=/tmp/temp_partition_data_file.cfg
 
@@ -57,7 +57,6 @@ sfdisk --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/null
 ###############################
 
 print "Format/mount partitions"
-sleep 3
 
 if [[ $UEFI -eq 1 ]]; then
     mkfs.vfat -F32 ${INSTALLATION_DISK}1
@@ -92,7 +91,6 @@ genfstab -U /mnt >> /mnt/etc/fstab
 ########################
 
 print "Install base packages"
-sleep 3
 
 pacstrap /mnt base base-devel linux linux-firmware 
 pacstrap /mnt os-prober networkmanager grub bash-completion 
@@ -116,7 +114,6 @@ fi
 ###########################
 
 print "Base configurations"
-sleep 3
 
 arch-chroot /mnt /bin/bash <<EOF
 ln -sf $TIME_ZONE /etc/localtime
@@ -145,7 +142,6 @@ fi
 #############
 
 print "Create root and default user"
-sleep 3
 
 arch-chroot /mnt /bin/bash <<EOF
 echo "root:${ROOT_PASSWORD}" | chpasswd
@@ -159,7 +155,6 @@ EOF
 ####################
 
 print "Grub install"
-sleep 3
 
 arch-chroot /mnt /bin/bash <<EOF
 echo "Instal grub $INSTALLATION_DISK"
@@ -170,7 +165,6 @@ echo "Grub install done"
 EOF
 
 print "Update packages"
-sleep 3
 
 arch-chroot /mnt /bin/bash <<EOF
 pacman -Syyu

@@ -4,7 +4,7 @@ source ./install.conf
 
 function print() {
     printf "\n<<< $1 >>>\n"
-    sleep 3
+    sleep 4
 }
 
 ###########################

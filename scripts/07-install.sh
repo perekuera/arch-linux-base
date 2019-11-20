@@ -9,7 +9,7 @@ function print() {
 
 arch-chroot /mnt /bin/bash <<EOF
 pacman -Syyu
-pacman -S git --noconfirm --needed
+pacman -S git --noconfirm
 EOF
 
 umount -R /mnt

@@ -99,7 +99,8 @@ if [[ $UEFI -eq 1 ]]; then
 fi
 
 if [[ $ENABLE_WIFI -eq 1 ]]; then
-    pacstrap /mnt netctl wpa_supplicant dialog
+    #pacstrap /mnt netctl wpa_supplicant dialog
+    pacstrap /mnt wpa_supplicant
 fi
 
 if [[ $ENABLE_TOUCHPAD -eq 1 ]]; then

@@ -2,6 +2,8 @@
 
 source ./install.conf
 
+UEFI=1
+
 function print() {
     printf "\n<<< $1 >>>\n"
     sleep 4

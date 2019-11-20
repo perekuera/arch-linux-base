@@ -50,4 +50,4 @@ else
     fi
 fi
 
-sfdisk --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/null
+sfdisk -W always --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/null

@@ -15,9 +15,9 @@ function print() {
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel linux linux-firmware 
-    \ os-prober networkmanager grub bash-completion 
-    \ nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
+pacstrap /mnt base base-devel linux linux-firmware \
+              os-prober networkmanager grub bash-completion \
+              nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr

@@ -50,7 +50,7 @@ else
     fi
 fi
 
-sfdisk --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/null
+sfdisk -W always --force $INSTALLATION_DISK < $TEMP_PARTITION_DATA_FILE > /dev/null
 
 ###############################
 ### Format/mount partitions ###
@@ -63,10 +63,10 @@ if [[ $UEFI -eq 1 ]]; then
     if [[ $SWAP_SIZE -gt 0 ]]; then
         mkswap ${INSTALLATION_DISK}2
         swapon ${INSTALLATION_DISK}2
-        mkfs.ext4 ${INSTALLATION_DISK}3
+        mkfs.ext4 -F ${INSTALLATION_DISK}3
         mount ${INSTALLATION_DISK}3 /mnt
     else
-        mkfs.ext4 ${INSTALLATION_DISK}2
+        mkfs.ext4 -F ${INSTALLATION_DISK}2
         mount ${INSTALLATION_DISK}2 /mnt
     fi
     mkdir -p /mnt/boot/efi
@@ -75,10 +75,10 @@ else
     if [[ $SWAP_SIZE -gt 0 ]]; then
         mkswap ${INSTALLATION_DISK}1
         swapon ${INSTALLATION_DISK}1
-        mkfs.ext4 ${INSTALLATION_DISK}2
+        mkfs.ext4 -F ${INSTALLATION_DISK}2
         mount ${INSTALLATION_DISK}2 /mnt
     else
-        mkfs.ext4 ${INSTALLATION_DISK}1
+        mkfs.ext4 -F ${INSTALLATION_DISK}1
         mount ${INSTALLATION_DISK}1 /mnt
     fi
     mkdir /mnt/boot
@@ -90,9 +90,9 @@ fi
 
 print "Install base packages"
 
-pacstrap /mnt base base-devel linux linux-firmware 
-    \ os-prober networkmanager grub bash-completion 
-    \ nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
+pacstrap /mnt base base-devel linux linux-firmware \
+              os-prober networkmanager grub bash-completion \
+              nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr
@@ -149,13 +149,23 @@ EOF
 
 print "Grub install"
 
+if [[ $UEFI -eq 1 ]]; then
 arch-chroot /mnt /bin/bash <<EOF
-echo "Install grub $INSTALLATION_DISK"
+echo "Install grub-efi $INSTALLATION_DISK"
+grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
 os-prober
-grub-install $INSTALLATION_DISK
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF
+else
+arch-chroot /mnt /bin/bash <<EOF
+echo "Install grub-bios $INSTALLATION_DISK"
+grub-install $INSTALLATION_DISK
+os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
+echo "Grub install done"
+EOF
+fi
 
 print "Update packages"
 

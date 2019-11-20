@@ -130,12 +130,6 @@ mkinitcpio -p linux
 systemctl enable NetworkManager
 EOF
 
-if [[ ! -z "$WIFI_SSID" && ! -z "$WIFI_PASSWORD" ]]; then
-arch-chroot /mnt /bin/bash <<EOF
-nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
-EOF
-fi
-
 #############
 ### Users ###
 #############
@@ -173,3 +167,12 @@ EOF
 umount -R /mnt
 
 print "Base installation complete, type 'reboot'"
+
+exit
+
+# Esto hay que moverlo (se hace desde el usuario con sudo)
+if [[ ! -z "$WIFI_SSID" && ! -z "$WIFI_PASSWORD" ]]; then
+arch-chroot /mnt /bin/bash <<EOF
+sudo nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
+EOF
+fi

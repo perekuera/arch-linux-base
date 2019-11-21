@@ -144,6 +144,8 @@ echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 sed -r -i "s/# %wheel ALL=\(ALL\) ALL/%wheel ALL=\(ALL\) ALL/g" /etc/sudoers
 EOF
 
+exit
+
 ####################
 ### Grub install ###
 ####################

@@ -93,19 +93,22 @@ print "Install base packages"
 pacstrap /mnt base base-devel linux linux-firmware \
               networkmanager grub bash-completion \
               nano ntfs-3g gvfs gvfs-afc gvfs-mtp \
-              xdg-user-dirs
+              xdg-user-dirs git
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr
 fi
 
 if [[ $ENABLE_WIFI -eq 1 ]]; then
-    #pacstrap /mnt netctl wpa_supplicant dialog
-    pacstrap /mnt wpa_supplicant
+    pacstrap /mnt netctl wpa_supplicant dialog
 fi
 
 if [[ $ENABLE_TOUCHPAD -eq 1 ]]; then
     pacstrap /mnt xf86-input-synaptics
+fi
+
+if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
+    pacstrap /mnt bluez
 fi
 
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -129,8 +132,14 @@ echo KEYMAP=$KEYMAP > /etc/vconsole.conf
 sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/" /etc/locale.gen
 locale-gen
 sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
-systemctl enable NetworkManager
+systemctl enable NetworkManager.service
 EOF
+
+if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
+arch-chroot /mnt /bin/bash <<EOF
+systemctl enable bluetooth.service
+EOF
+fi
 
 #############
 ### Users ###
@@ -171,14 +180,9 @@ print "Update packages"
 
 arch-chroot /mnt /bin/bash <<EOF
 pacman -Syyu
-pacman -S git --noconfirm --needed
 mkinitcpio -p linux
 EOF
 
 umount -R /mnt
 
 print "Base installation complete, type 'reboot'"
-
-#Pendiente bluetooth
-#pacman -S bluez
-#sudo systemctl enable bluetooth.service

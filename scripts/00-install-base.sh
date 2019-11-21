@@ -91,8 +91,9 @@ fi
 print "Install base packages"
 
 pacstrap /mnt base base-devel linux linux-firmware \
-              os-prober networkmanager grub bash-completion \
-              nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
+              networkmanager grub bash-completion \
+              nano ntfs-3g gvfs gvfs-afc gvfs-mtp \
+              xdg-user-dirs
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr
@@ -123,11 +124,11 @@ echo -e "127.0.0.1\tlocalhost" >> /etc/hosts
 echo -e "::1\t\tlocalhost" >> /etc/hosts
 echo -e "127.0.0.1\t${HOST_NAME}.localdomain\t${HOST_NAME}" >> /etc/hosts
 echo LANG=$LOCALE_CONF > /etc/locale.conf
+export LANG=$LOCALE_CONF
 echo KEYMAP=$KEYMAP > /etc/vconsole.conf
 sed -i "s/#${LOCALE_CONF}/${LOCALE_CONF}/" /etc/locale.gen
 locale-gen
 sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
-mkinitcpio -p linux
 systemctl enable NetworkManager
 EOF
 
@@ -144,8 +145,6 @@ echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 sed -r -i "s/# %wheel ALL=\(ALL\) ALL/%wheel ALL=\(ALL\) ALL/g" /etc/sudoers
 EOF
 
-exit
-
 ####################
 ### Grub install ###
 ####################
@@ -156,7 +155,6 @@ if [[ $UEFI -eq 1 ]]; then
 arch-chroot /mnt /bin/bash <<EOF
 echo "Install grub-efi $INSTALLATION_DISK"
 grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
-os-prober
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF
@@ -164,7 +162,6 @@ else
 arch-chroot /mnt /bin/bash <<EOF
 echo "Install grub-bios $INSTALLATION_DISK"
 grub-install $INSTALLATION_DISK
-os-prober
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "Grub install done"
 EOF
@@ -175,17 +172,13 @@ print "Update packages"
 arch-chroot /mnt /bin/bash <<EOF
 pacman -Syyu
 pacman -S git --noconfirm --needed
+mkinitcpio -p linux
 EOF
 
 umount -R /mnt
 
 print "Base installation complete, type 'reboot'"
 
-exit
-
-# Esto hay que moverlo (se hace desde el usuario con sudo)
-if [[ ! -z "$WIFI_SSID" && ! -z "$WIFI_PASSWORD" ]]; then
-arch-chroot /mnt /bin/bash <<EOF
-sudo nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
-EOF
-fi
+#Pendiente bluetooth
+#pacman -S bluez
+#sudo systemctl enable bluetooth.service

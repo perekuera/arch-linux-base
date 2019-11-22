@@ -177,6 +177,8 @@ pacman -Syyu
 mkinitcpio -p linux
 EOF
 
+cp -r ~/arch-linux-base /mnt/home/${USER_NAME}
+
 umount -R /mnt
 
 print "Base installation complete, type 'reboot' and login with $USER_NAME"

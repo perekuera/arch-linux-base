@@ -93,7 +93,7 @@ print "Install base packages"
 pacstrap /mnt base base-devel linux linux-firmware \
               networkmanager grub bash-completion \
               nano ntfs-3g gvfs gvfs-afc gvfs-mtp \
-              xdg-user-dirs git
+              xdg-user-dirs
 
 if [[ $UEFI -eq 1 ]]; then
     pacstrap /mnt efibootmgr
@@ -134,12 +134,6 @@ locale-gen
 sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
 systemctl enable NetworkManager.service
 EOF
-
-if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
-arch-chroot /mnt /bin/bash <<EOF
-systemctl enable bluetooth.service
-EOF
-fi
 
 #############
 ### Users ###

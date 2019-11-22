@@ -4,7 +4,7 @@ source ./install.conf
 
 function print() {
     printf "\n<<< $1 >>>\n"
-    sleep 4
+    sleep 2
 }
 
 ###########################
@@ -185,4 +185,4 @@ EOF
 
 umount -R /mnt
 
-print "Base installation complete, type 'reboot'"
+print "Base installation complete, type 'reboot' and login with $USER_NAME"

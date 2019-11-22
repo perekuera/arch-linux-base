@@ -14,4 +14,4 @@
 You need internet connection at this moment. Use `wifi-menu` to configure it if necessary.
 
 
-#### Some scripts from [Erik Dubois](https://erikdubois.be) - [GitHub](https://github.com/erikdubois)
+##### Some scripts in 'extra' folder from [Erik Dubois](https://erikdubois.be){:target="_blank"} - [GitHub](https://github.com/erikdubois){:target="_blank"}

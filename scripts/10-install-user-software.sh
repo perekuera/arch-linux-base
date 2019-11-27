@@ -15,13 +15,10 @@ sudo reflector -l 100 -f 50 --sort rate --threads 5 --verbose --save /tmp/mirror
 
 sudo pacman -Syyu
 
-
-
-if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
-    sudo pacman -S bluez --noconfirm    
-    echo -e "$USER_PASSWORD\n" | sudo -S pacman -S bluez --noconfirm
-    echo -e "$USER_PASSWORD\n" | sudo -S systemctl enable bluetooth.service
-fi
+# if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
+#     echo -e "$USER_PASSWORD\n" | sudo -S pacman -S bluez --noconfirm
+#     echo -e "$USER_PASSWORD\n" | sudo -S systemctl enable bluetooth.service
+# fi
 
 echo -e "$USER_PASSWORD\n" | sudo -S pacman -S wget htop yay neofetch git --noconfirm
 

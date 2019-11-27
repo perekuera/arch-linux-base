@@ -7,6 +7,10 @@ if [[ "$USER" != "$USER_NAME" ]]; then
     exit
 fi
 
+if [[ $ENABLE_WIFI -eq 1 ]]; then
+    echo -e "$USER_PASSWORD\n" | sudo nmcli dev wifi connect $WIFI_SSID password $WIFI_PASSWORD
+fi
+
 # installing refector to test wich servers are fastest
 sudo pacman -S --noconfirm --needed reflector
 
@@ -15,10 +19,10 @@ sudo reflector -l 100 -f 50 --sort rate --threads 5 --verbose --save /tmp/mirror
 
 sudo pacman -Syyu
 
-# if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
-#     echo -e "$USER_PASSWORD\n" | sudo -S pacman -S bluez --noconfirm
-#     echo -e "$USER_PASSWORD\n" | sudo -S systemctl enable bluetooth.service
-# fi
+if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
+    echo -e "$USER_PASSWORD\n" | sudo -S pacman -S bluez --noconfirm
+    echo -e "$USER_PASSWORD\n" | sudo -S systemctl enable bluetooth.service
+fi
 
 echo -e "$USER_PASSWORD\n" | sudo -S pacman -S wget htop yay neofetch git --noconfirm
 

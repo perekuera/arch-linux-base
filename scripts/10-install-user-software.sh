@@ -26,7 +26,18 @@ fi
 
 echo -e "$USER_PASSWORD\n" | sudo -S pacman -S wget htop neofetch git --noconfirm
 
-echo -e "$USER_PASSWORD\n" | sudo echo -e "\nneofetch\n" >> .bashrc
+echo -e "$USER_PASSWORD\n" | sudo echo -e "\nneofetch\n" >> ~/.bashrc
 
-# install packer (extra/install-packer.sh)
-# install with packer: yay
+# install Packer
+[ -d /tmp/packer ] && rm -rf /tmp/packer
+mkdir /tmp/packer
+wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
+mv PKGBUILD\?h\=packer /tmp/packer/PKGBUILD
+cd /tmp/packer
+makepkg -i /tmp/packer --noconfirm
+[ -d /tmp/packer ] && rm -rf /tmp/packer
+
+# install with Packer: yay
+packer -Syu yay --noconfirm --noedit
+
+print "User software installation complete"

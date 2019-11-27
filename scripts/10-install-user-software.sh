@@ -27,3 +27,6 @@ fi
 echo -e "$USER_PASSWORD\n" | sudo -S pacman -S wget htop neofetch git --noconfirm
 
 echo -e "$USER_PASSWORD\n" | sudo echo -e "\nneofetch\n" >> .bashrc
+
+# install packer (extra/install-packer.sh)
+# install with packer: yay

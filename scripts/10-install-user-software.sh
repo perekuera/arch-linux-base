@@ -24,6 +24,6 @@ if [[ $ENABLE_BLUETOOTH -eq 1 ]]; then
     echo -e "$USER_PASSWORD\n" | sudo -S systemctl enable bluetooth.service
 fi
 
-echo -e "$USER_PASSWORD\n" | sudo -S pacman -S wget htop yay neofetch git --noconfirm
+echo -e "$USER_PASSWORD\n" | sudo -S pacman -S wget htop neofetch git --noconfirm
 
-echo -e "\nneofetch\n" >> .bashrc
+echo -e "$USER_PASSWORD\n" | sudo echo -e "\nneofetch\n" >> .bashrc

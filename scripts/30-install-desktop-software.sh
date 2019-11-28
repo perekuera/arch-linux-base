@@ -20,5 +20,5 @@ cd ~
 gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 2EBF997C15BDA244B6EBF5D84773BD5E130D1D45
 git clone https://aur.archlinux.org/spotify.git
 cd spotify
-makepkg -sri
+makepkg -sri --noconfirm
 rm -rf ~/spotify

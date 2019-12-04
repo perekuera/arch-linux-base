@@ -40,4 +40,14 @@ makepkg -i /tmp/packer --noconfirm
 # install with Packer: yay
 packer -Syu yay --noconfirm --noedit
 
+# install zsh
+sudo pacman -S zsh zsh-completions zsh-syntax-highlighting --noconfirm --needed
+yay -S command-not-found
+wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+# set zsh random theme
+sudo sed -i 's/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"random\"/g' ~/.zshrc
+
+# enable zsh shell
+sudo chsh $USER -s /bin/zsh
+
 print "User software installation complete"

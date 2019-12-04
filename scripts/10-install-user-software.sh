@@ -26,7 +26,7 @@ fi
 
 sudo -S pacman -S wget htop neofetch git --noconfirm
 
-sudo echo -e "\nneofetch\n" >> ~/.bashrc
+sudo sed -i '1ineofetch' ~/.bashrc
 
 # install Packer
 [ -d /tmp/packer ] && rm -rf /tmp/packer
@@ -46,6 +46,7 @@ yay -S command-not-found
 wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
 # set zsh random theme
 sudo sed -i 's/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"random\"/g' ~/.zshrc
+sudo sed -i '1ineofetch' ~/.zshrc
 
 # enable zsh shell
 sudo chsh $USER -s /bin/zsh

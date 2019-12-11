@@ -52,3 +52,15 @@ sudo sed -i '1ineofetch' ~/.zshrc
 sudo chsh $USER -s /bin/zsh
 
 print "User software installation complete"
+
+#.bashrc .zshrc
+#export http_proxy=127.0.0.1:3128
+#export https_proxy=$http_proxy
+#export ftp_proxy=$http_proxy
+#export HTTP_PROXY=$http_proxy
+
+#cntlm
+#Proxy           10.83.0.132:8080
+#NoProxy         localhost, 127.0.0.*, 10.*, 192.168.* localhost*, localhost.*, des.* pre.*, 10.153.0.24*, 10.153.5.28*, 10.153>
+
+

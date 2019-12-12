@@ -1,0 +1,30 @@
+### BOOT ISO
+
+loadkeys es
+
+# proxy config
+export http_proxy="http://user:pwd@ip:port"
+export https_proxy=$http_proxy
+export ftp_proxy=$http_proxy
+export HTTP_PROXY=$http_proxy
+export HTTPS_PROXY=$http_proxy
+export FTP_PROXY=$http_proxy
+
+# test internet
+ip link
+ping archlinux.org
+
+# verify boot mode
+ls /sys/firmware/efi/efivars
+
+# update system clock
+timedatectl set-ntp true
+
+# partition disks list
+fdisk -l
+
+# create partitions
+cfdisk
+
+# mount
+

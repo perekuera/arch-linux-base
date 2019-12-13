@@ -1,4 +1,4 @@
-### BOOT ISO
+# BOOT ISO
 
 loadkeys es
 
@@ -26,5 +26,146 @@ fdisk -l
 # create partitions
 cfdisk
 
-# mount
+# format partitions
+mkfs.vfat -F32 /dev/sdb1
+mkfs.ext4 /dev/sdb5
+
+# swap?
+mkswap /dev/sdb6
+swapon /dev/sdb6
+
+# mount partitions
+mount /dev/sdb5 /mnt
+mkdir -p /mnt/boot/efi
+mount /dev/sdb1 /mnt/boot/efi
+
+pacstrap /mnt base base-devel linux linux-firmware networkmanager grub os-prober bash-completion nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
+#pacstrap efibootmgr
+
+# Nota: Para usar el símbolo de mayor que > , presiona la combinación de teclas Alt + 62
+genfstab -U /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt
+
+# system configuration
+echo arch > /etc/hostname
+
+ln -sf /usr/share/zoneinfo/Europe/Madrid /etc/localtime
+hwclock --systohc
+
+echo -e "127.0.0.1\tlocalhost" >> /etc/hosts
+echo -e "::1\t\tlocalhost" >> /etc/hosts
+echo -e "127.0.0.1\tarch.localdomain\tarch" >> /etc/hosts
+
+echo LANG=es_ES.UTF-8 > /etc/locale.conf
+export LANG=es_ES.UTF-8
+echo KEYMAP=es > /etc/vconsole.conf
+sed -i "s/#es_ES.UTF-8/es_ES.UTF-8/" /etc/locale.gen
+locale-gen
+sed -z -i "s/#\[multilib\]\n#Include/\[multilib\]\nInclude/" /etc/pacman.conf
+systemctl enable NetworkManager.service
+
+# root password
+passwd
+
+# add user
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner,network,rfkill -s /bin/bash user_name
+passwd user_name
+
+# grub
+grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
+grub-mkconfig -o /boot/grub/grub.cfg
+# os-prober ?
+
+# update system
+pacman -Syyu
+mkinitcpio -p linux
+
+exit
+
+# umount
+umount /mnt/boot/efi
+umount /mnt
+
+reboot
+
+# finding the fastest archlinux servers
+sudo pacman -S --noconfirm --needed reflector
+sudo reflector -l 100 -f 50 --sort rate --threads 5 --verbose --save /tmp/mirrorlist.new && rankmirrors -n 0 /tmp/mirrorlist.new > /tmp/mirrorlist && sudo cp /tmp/mirrorlist /etc/pacman.d
+
+sudo pacman -Syyu
+
+# more...
+sudo -S pacman -S wget htop neofetch git --noconfirm
+
+sudo sed -i '1ineofetch' ~/.bashrc
+
+# install Packer
+mkdir /tmp/packer
+wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
+mv PKGBUILD\?h\=packer /tmp/packer/PKGBUILD
+cd /tmp/packer
+makepkg -i /tmp/packer --noconfirm
+rm -rf /tmp/packer
+
+# install with Packer: yay
+packer -Syu yay --noconfirm --noedit
+
+# install zsh
+sudo pacman -S zsh zsh-completions zsh-syntax-highlighting --noconfirm --needed
+yay -S command-not-found
+wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
+# set zsh random theme
+sudo sed -i 's/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"random\"/g' ~/.zshrc
+sudo sed -i '1ineofetch' ~/.zshrc
+
+# enable zsh shell
+sudo chsh $USER -s /bin/zsh
+
+# cntlm
+# git clone https://aur.archlinux.org/cntlm.git
+# cd cntlm
+yay cntlm
+
+# for config sample
+git clone https://github.com/Evengard/cntlm.git
+
+# create user config
+cntlm -H
+
+# test cntlm
+cntlm -v
+systemctl status cntlm
+
+# cntlm config -> .bashrc .zshrc
+#export http_proxy=127.0.0.1:3128
+#export https_proxy=$http_proxy
+#export ftp_proxy=$http_proxy
+#export HTTP_PROXY=$http_proxy
+
+
+# deepin desktop
+sudo pacman -S xorg-server xorg-xinit --noconfirm --needed
+sudo pacman -S xf86-video-ati
+sudo pacman -S deepin deepin-extra --noconfirm
+
+sudo sed -z -i "s/\[Seat\:\*\]\n/\[Seat\:\*\]\ngreeter-session=lightdm-deepin-greeter\n/" /etc/lightdm/lightdm.conf
+
+sudo systemctl enable lightdm.service
+
+# Google Chrome
+yay -S google-chrome
+
+# Firefox
+sudo pacman -S firefox --noconfirm --needed
+
+sudo pacman -S vi vim file-roller grub-customizer --noconfirm --needed
+
+#spotify
+cd ~
+gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 2EBF997C15BDA244B6EBF5D84773BD5E130D1D45
+git clone https://aur.archlinux.org/spotify.git
+cd spotify
+makepkg -sri --noconfirm
+rm -rf ~/spotify
 

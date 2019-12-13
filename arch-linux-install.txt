@@ -168,4 +168,3 @@ git clone https://aur.archlinux.org/spotify.git
 cd spotify
 makepkg -sri --noconfirm
 rm -rf ~/spotify
-

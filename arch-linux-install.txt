@@ -142,7 +142,11 @@ systemctl status cntlm
 #export https_proxy=$http_proxy
 #export ftp_proxy=$http_proxy
 #export HTTP_PROXY=$http_proxy
+#export HTTPS_PROXY=$http_proxy
+#export FTP_PROXY=$http_proxy
 
+visudo
+Defaults env_keep += "http_proxy https_proxy ftp_proxy HTTP_PROXY HTTPS_PROXY FTP_PROXY"
 
 # deepin desktop
 sudo pacman -S xorg-server xorg-xinit --noconfirm --needed

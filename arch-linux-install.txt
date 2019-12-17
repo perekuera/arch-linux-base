@@ -39,7 +39,8 @@ mount /dev/sdb5 /mnt
 mkdir -p /mnt/boot/efi
 mount /dev/sdb1 /mnt/boot/efi
 
-pacstrap /mnt base base-devel linux linux-firmware networkmanager grub os-prober bash-completion nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
+pacstrap /mnt base base-devel linux linux-firmware networkmanager grub os-prober 
+	bash-completion nano ntfs-3g gvfs gvfs-afc gvfs-mtp xdg-user-dirs
 #pacstrap efibootmgr
 
 # Nota: Para usar el símbolo de mayor que > , presiona la combinación de teclas Alt + 62
@@ -69,8 +70,11 @@ systemctl enable NetworkManager.service
 passwd
 
 # add user
-useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner,network,rfkill -s /bin/bash user_name
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner,network,
+	rfkill -s /bin/bash user_name
 passwd user_name
+
+#edit sudoers
 
 # grub
 grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
@@ -91,7 +95,9 @@ reboot
 
 # finding the fastest archlinux servers
 sudo pacman -S --noconfirm --needed reflector
-sudo reflector -l 100 -f 50 --sort rate --threads 5 --verbose --save /tmp/mirrorlist.new && rankmirrors -n 0 /tmp/mirrorlist.new > /tmp/mirrorlist && sudo cp /tmp/mirrorlist /etc/pacman.d
+sudo reflector -l 100 -f 50 --sort rate --threads 5 --verbose --save /tmp/mirrorlist.new 
+	&& rankmirrors -n 0 /tmp/mirrorlist.new > /tmp/mirrorlist && sudo cp /tmp/mirrorlist 
+	/etc/pacman.d
 
 sudo pacman -Syyu
 
@@ -154,7 +160,8 @@ sudo pacman -S xorg-server xorg-xinit --noconfirm --needed
 sudo pacman -S xf86-video-ati
 sudo pacman -S deepin deepin-extra --noconfirm
 
-sudo sed -z -i "s/\[Seat\:\*\]\n/\[Seat\:\*\]\ngreeter-session=lightdm-deepin-greeter\n/" /etc/lightdm/lightdm.conf
+sudo sed -z -i "s/\[Seat\:\*\]\n/\[Seat\:\*\]\ngreeter-session=lightdm-deepin-greeter\n/" 
+	/etc/lightdm/lightdm.conf
 
 sudo systemctl enable lightdm.service
 

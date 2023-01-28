@@ -1,6 +1,6 @@
 # BOOT ISO
 
-loadkeys es
+loadkeys es 
 
 # proxy config
 export http_proxy="http://user:pwd@ip:port"
